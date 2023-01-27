@@ -1,10 +1,9 @@
-flags = -g -Wall -Wextra -Werror -std=c++17
-clang_flags =
+flags = -g -std=c++17
 
 .Phony: compile clean
 
 compile:
-	@clang++ $(flags) $(clang_flags) *.cpp -o plummetc
+	clang++ $(flags) `llvm-config --cxxflags --ldflags --system-libs --libs all` main.cpp -o plummetc
 
 clean:
-	@[ -f plummetc ] && rm plummetc || true
+	[ -f plummetc ] && rm plummetc || true
