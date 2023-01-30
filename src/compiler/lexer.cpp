@@ -263,9 +263,8 @@ void lexer::lexFile()
 	//       This will cause the string to be parsed incorrectly.
 	while(file->get(lastChar))
 	{
+		// TODO: This is a temporary fix for the problem described above.
 		jump:
-
-		std::cout << lastChar << std::endl;
 
 		columnNumber++;
 
