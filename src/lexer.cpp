@@ -261,8 +261,12 @@ void lexer::lexFile()
 	//       extra characters. For example, if a number is followed by a
 	//       string, the opening quote will be consumed by the while loop.
 	//       This will cause the string to be parsed incorrectly.
-	while (file->get(lastChar))
+	while(file->get(lastChar))
 	{
+		jump:
+
+		std::cout << lastChar << std::endl;
+
 		columnNumber++;
 
 		// Check for string literal
@@ -341,6 +345,7 @@ void lexer::lexFile()
 			}
 
 			columnNumber += tokenLength;
+			goto jump;
 		}
 
 		// Check for identifiers
@@ -367,12 +372,14 @@ void lexer::lexFile()
 			}
 
 			columnNumber += tokenLength;
+			goto jump;
 		}
 
 		// Check for comment
 		if (lastChar == '#')
 		{
 			while (file->get(lastChar) && lastChar != '\n') {}
+			goto jump;
 		}
 
 		// Check for newline
