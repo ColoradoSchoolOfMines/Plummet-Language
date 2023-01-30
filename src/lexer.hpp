@@ -15,13 +15,13 @@ class lexer
 	std::ifstream* file;
 	char lastChar;
 
-	void optimizeTokensHelper();
+	bool optimizeTokensHelper();
 
 	public:
 		lexer(const std::string&);
 
 		std::vector<token> getTokens();
-		void optimizeTokens(const int = -1);
+		void optimizeTokens();
 		void lexFile();
 };
 

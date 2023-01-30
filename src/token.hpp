@@ -14,7 +14,9 @@ enum tokenType
 	doubleLiteral,
 	stringLiteral,
 
+	// Other
 	identifier,
+	semicolon,
 
 	// Symbols
 	openParenthesis,  // (

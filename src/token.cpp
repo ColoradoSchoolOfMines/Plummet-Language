@@ -19,6 +19,7 @@ token::token(tokenType type, const std::string& value, size_t lineNumber, size_t
 		{ tokenType::stringLiteral, "stringLiteral" },
 
 		{ tokenType::identifier, "identifier" },
+		{ tokenType::semicolon, "semicolon" },
 
 		{ tokenType::openParenthesis, "openParenthesis" },
 		{ tokenType::closeParenthesis, "closeParenthesis" },

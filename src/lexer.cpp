@@ -24,9 +24,10 @@ std::vector<token> lexer::getTokens()
 	return tokens;
 }
 
-void lexer::optimizeTokensHelper()
+bool lexer::optimizeTokensHelper()
 {
 	// TODO: Implement optimization routines
+	bool optimiationMade = false;
 	std::queue<token> tokenQueue;
 	for (int i = 0; i < tokens.size(); i++)
 	{
@@ -160,6 +161,68 @@ void lexer::optimizeTokensHelper()
 			break;
 		}
 
+		// Check for double literal to integer literal arithmetic operations
+		if (tokens[i].getType() == tokenType::doubleLiteral &&
+				tokens[i + 1].getType() == tokenType::plusSign &&
+				tokens[i + 2].getType() == tokenType::integerLiteral)
+		{
+			tokens[i].setType(tokenType::optimizationToken);
+			tokens[i + 1].setType(tokenType::optimizationToken);
+			tokens[i + 2].setType(tokenType::optimizationToken);
+			tokenQueue.push(token(tokenType::doubleLiteral,
+					std::to_string(std::stod(tokens[i].getValue()) + std::stod(tokens[i + 2].getValue())),
+					tokens[i].getLineNumber(), tokens[i].getColumnNumber()));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			break;
+		}
+
+		if (tokens[i].getType() == tokenType::doubleLiteral &&
+				tokens[i + 1].getType() == tokenType::minusSign &&
+				tokens[i + 2].getType() == tokenType::integerLiteral)
+		{
+			tokens[i].setType(tokenType::optimizationToken);
+			tokens[i + 1].setType(tokenType::optimizationToken);
+			tokens[i + 2].setType(tokenType::optimizationToken);
+			tokenQueue.push(token(tokenType::doubleLiteral,
+					std::to_string(std::stod(tokens[i].getValue()) - std::stod(tokens[i + 2].getValue())),
+					tokens[i].getLineNumber(), tokens[i].getColumnNumber()));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			break;
+		}
+
+		// Check for integer literal to double literal arithmetic operations
+		if (tokens[i].getType() == tokenType::integerLiteral &&
+				tokens[i + 1].getType() == tokenType::plusSign &&
+				tokens[i + 2].getType() == tokenType::doubleLiteral)
+		{
+			tokens[i].setType(tokenType::optimizationToken);
+			tokens[i + 1].setType(tokenType::optimizationToken);
+			tokens[i + 2].setType(tokenType::optimizationToken);
+			tokenQueue.push(token(tokenType::doubleLiteral,
+					std::to_string(std::stod(tokens[i].getValue()) + std::stod(tokens[i + 2].getValue())),
+					tokens[i].getLineNumber(), tokens[i].getColumnNumber()));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			break;
+		}
+
+		if (tokens[i].getType() == tokenType::integerLiteral &&
+				tokens[i + 1].getType() == tokenType::minusSign &&
+				tokens[i + 2].getType() == tokenType::doubleLiteral)
+		{
+			tokens[i].setType(tokenType::optimizationToken);
+			tokens[i + 1].setType(tokenType::optimizationToken);
+			tokens[i + 2].setType(tokenType::optimizationToken);
+			tokenQueue.push(token(tokenType::doubleLiteral,
+					std::to_string(std::stod(tokens[i].getValue()) - std::stod(tokens[i + 2].getValue())),
+					tokens[i].getLineNumber(), tokens[i].getColumnNumber()));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			tokenQueue.push(token(tokenType::emptyToken, "", 0, 0));
+			break;
+		}
+
 		// Check for literal comparisons
 
 		// Check for unnecessary parentheses
@@ -174,48 +237,33 @@ void lexer::optimizeTokensHelper()
 		} else if (tokenQueue.front().getType() != tokenType::emptyToken) {
 			optimizedTokens.push_back(tokenQueue.front());
 			tokenQueue.pop();
+			optimiationMade = true;
 		} else {
 			tokenQueue.pop();
 		}
 	}
 
 	tokens = optimizedTokens;
+	return optimiationMade;
 }
 
-void lexer::optimizeTokens(int optimizationPasses)
+void lexer::optimizeTokens()
 {
-	if (optimizationPasses < 0)
-	{
-		// 20 passes per line if optimizationPasses is not defined
-		optimizationPasses = lineNumber * 20;
-	}
-
-	for (int i = 0; i < optimizationPasses; i++)
-	{
-		optimizeTokensHelper();
-	}
+	// Optimize tokens until no more optimizations can be made
+	while (optimizeTokensHelper()) {}
 }
 
 void lexer::lexFile()
 {
 	// Extract tokens from file
+
+	// TODO: file->get(lastChar) will be problematic as it will consume
+	//       extra characters. For example, if a number is followed by a
+	//       string, the opening quote will be consumed by the while loop.
+	//       This will cause the string to be parsed incorrectly.
 	while (file->get(lastChar))
 	{
 		columnNumber++;
-
-		// Check for comment
-		if (lastChar == '#')
-		{
-			while (file->get(lastChar) && lastChar != '\n') {}
-		}
-
-		// Check for newline
-		if (lastChar == '\n')
-		{
-			columnNumber = 0;
-			lineNumber++;
-			continue;
-		}
 
 		// Check for string literal
 		if (lastChar == '"')
@@ -319,6 +367,27 @@ void lexer::lexFile()
 			}
 
 			columnNumber += tokenLength;
+		}
+
+		// Check for comment
+		if (lastChar == '#')
+		{
+			while (file->get(lastChar) && lastChar != '\n') {}
+		}
+
+		// Check for newline
+		if (lastChar == '\n')
+		{
+			columnNumber = 0;
+			lineNumber++;
+			continue;
+		}
+
+		// Check for semicolon
+		if (lastChar == ';')
+		{
+			tokens.push_back(token(tokenType::semicolon, ";", lineNumber, columnNumber));
+			continue;
 		}
 
 		// Check for single character tokens
