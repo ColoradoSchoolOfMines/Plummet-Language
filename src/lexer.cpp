@@ -38,7 +38,7 @@ void lexer::lexFile()
 			continue;
 		}
 
-		// Check for string
+		// Check for string literal
 		if (lastChar == '"')
 		{
 			// Parse string from text
@@ -55,6 +55,31 @@ void lexer::lexFile()
 			columnNumber += tokenLength;
 		}
 
+		// Check for character literal
+		if (lastChar == '\'')
+		{
+			// Parse string from text
+			std::string tempString;
+			bool escape = false;
+			int tokenLength = 0;
+			while (file->get(lastChar) && lastChar != '\'')
+			{
+				// TODO: Handle escape sequences and produce error if invalid escape sequence or invalid character literal
+				tempString += lastChar;
+				tokenLength++;
+			}
+			tokenLength++;
+
+			tokens.push_back(token(tokenType::characterLiteral, tempString, lineNumber, columnNumber));
+			columnNumber += tokenLength;
+		}
+
+		// Check for number literals
+		// IMPORTANT: READ BELOW
+		// NOTE: a double literal is any number with a single decimal point otherwise it is an integer literal
+		// NOTE: make sure to catch double literals with more than one decimal point
+		// NOTE: any number literal can have a negative sign in front of it
+
 		// Check for identifiers
 		if (isalpha(lastChar) || lastChar == '_')
 		{
@@ -70,7 +95,14 @@ void lexer::lexFile()
 			}
 			tokenLength++;
 
-			tokens.push_back(token(tokenType::identifier, identifierString, lineNumber, columnNumber));
+			// Check for boolean literals
+			if (identifierString == "true" || identifierString == "false")
+			{
+				tokens.push_back(token(tokenType::booleanLiteral, identifierString, lineNumber, columnNumber));
+			} else {
+				tokens.push_back(token(tokenType::identifier, identifierString, lineNumber, columnNumber));
+			}
+
 			columnNumber += tokenLength;
 		}
 	}

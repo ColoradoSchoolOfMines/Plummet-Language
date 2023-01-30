@@ -7,7 +7,10 @@
 
 enum tokenType
 {
+	characterLiteral,
+	booleanLiteral,
 	integerLiteral,
+	doubleLiteral,
 	stringLiteral,
 	identifier,
 };

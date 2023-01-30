@@ -12,7 +12,10 @@ token::token(tokenType type, const std::string& value, size_t lineNumber, size_t
 	: type(type), value(value), lineNumber(lineNumber), columnNumber(columnNumber)
 {
 	tokenTypeMap = {
+		{ tokenType::characterLiteral, "characterLiteral" },
+		{ tokenType::booleanLiteral, "booleanLiteral" },
 		{ tokenType::integerLiteral, "integerLiteral" },
+		{ tokenType::doubleLiteral, "doubleLiteral" },
 		{ tokenType::stringLiteral, "stringLiteral" },
 		{ tokenType::identifier, "identifier" },
 	};
