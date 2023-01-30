@@ -7,12 +7,33 @@
 
 enum tokenType
 {
+	// Literals
 	characterLiteral,
 	booleanLiteral,
 	integerLiteral,
 	doubleLiteral,
 	stringLiteral,
+
 	identifier,
+
+	// Symbols
+	openParenthesis,  // (
+	closeParenthesis, // )
+	openBracket,      // [
+	closeBracket,     // ]
+	openBrace,        // {
+	closeBrace,       // }
+	
+	// Math operators
+	plusSign,
+	minusSign,
+	multiplySign,
+	divideSign,
+	moduloSign,
+
+	// Special Optimization Token
+	optimizationToken,
+	emptyToken,
 };
 
 class token
@@ -27,6 +48,7 @@ class token
 		void prettyPrint();
 
 		size_t getColumnNumber();
+		void setType(tokenType);
 		size_t getLineNumber();
 		std::string getValue();
 		tokenType getType();

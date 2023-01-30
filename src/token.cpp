@@ -17,7 +17,21 @@ token::token(tokenType type, const std::string& value, size_t lineNumber, size_t
 		{ tokenType::integerLiteral, "integerLiteral" },
 		{ tokenType::doubleLiteral, "doubleLiteral" },
 		{ tokenType::stringLiteral, "stringLiteral" },
+
 		{ tokenType::identifier, "identifier" },
+
+		{ tokenType::openParenthesis, "openParenthesis" },
+		{ tokenType::closeParenthesis, "closeParenthesis" },
+		{ tokenType::openBracket, "openBracket" },
+		{ tokenType::closeBracket, "closeBracket" },
+		{ tokenType::openBrace, "openBrace" },
+		{ tokenType::closeBrace, "closeBrace" },
+
+		{ tokenType::plusSign, "plusSign" },
+		{ tokenType::minusSign, "minusSign" },
+		{ tokenType::multiplySign, "multiplySign" },
+		{ tokenType::divideSign, "divideSign" },
+		{ tokenType::moduloSign, "moduloSign" },
 	};
 }
 
@@ -27,6 +41,11 @@ void token::prettyPrint()
 		<< ", value: " << value
 		<< ", line: " << lineNumber
 		<< ", column: " << columnNumber << "]" << std::endl;
+}
+
+void token::setType(tokenType type)
+{
+	this->type = type;
 }
 
 size_t token::getColumnNumber()
