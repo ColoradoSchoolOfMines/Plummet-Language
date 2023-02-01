@@ -17,9 +17,11 @@ def Settings( **kwargs ):
 
                     # Project source paths
 
-                    '-I./src/package_manager/',
-                    '-I./src/compiler/',
-                    '-I./src/driver/'
+                    '-I./src/plummet/internal/compile/driver',
+                    '-I./src/plummet/internal/compile/lexer',
+                    '-I./src/plummet/internal/compile/error',
+                    '-I./src/plummet/internal/compile/token',
+                    '-I./src/plummet/internal/compile/ast',
 
                     # LLVM config flags
 
