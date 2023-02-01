@@ -1,1 +1,1 @@
-project structure subject to change
+dir for all primary components to the project
