@@ -1,0 +1,5 @@
+# Generic C-style source code file test
+int main() {
+	print("Hello World!");
+	return 0;
+}

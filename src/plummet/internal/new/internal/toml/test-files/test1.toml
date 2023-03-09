@@ -1,0 +1,6 @@
+[project]
+command = "myprogram"
+targets = ["*.plmt"]
+build_dir = "./build"
+source_dir = "./src"
+error_log = false
