@@ -1,0 +1,14 @@
+function main(): int => {
+}
+
+fn <int, void> main() {
+}
+
+func main() ==<int>=={
+}
+
+int main() {
+}
+
+fn main() => <int, exception> {
+}
