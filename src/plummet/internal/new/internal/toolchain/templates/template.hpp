@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-// using valueMap = std::unordered_map<std::string, std::string>;
+// using valueMap = std::unordered_map<std::string, std::vector<std::string>;
 #include "value-map.hpp"
 
 // Abstract class for toolchain templates
