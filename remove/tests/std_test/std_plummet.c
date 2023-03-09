@@ -60,7 +60,7 @@ char* join(char** list, char delim) {
 	
 	int str_length = 0;
 	for (int i = 0; list[i] != NULL; i++) {
-		str_length += strlen(list[i]) + 1;
+		str_length += strlen(list[i]) + 2;
 	}
 	char* str = (char*)malloc(str_length);
 
