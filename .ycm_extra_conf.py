@@ -25,8 +25,9 @@ def Settings( **kwargs ):
 
                     '-I./src/plummet/internal/new/internal/setup',
                     '-I./src/plummet/internal/new/internal/toml',
+                    '-I./src/plummet/internal/new/internal/toml/internal',
                     '-I./src/plummet/internal/new/internal/toolchain',
-                    '-I./src/plummet/internal/new/internal/toolchain/templates',
+                    '-I./src/plummet/internal/new/internal/toolchain/internal',
 
                     # LLVM config flags
 
