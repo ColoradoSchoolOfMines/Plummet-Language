@@ -23,6 +23,11 @@ def Settings( **kwargs ):
                     '-I./src/plummet/internal/compile/internal/token',
                     '-I./src/plummet/internal/compile/internal/ast',
 
+                    '-I./src/plummet/internal/new/internal/setup',
+                    '-I./src/plummet/internal/new/internal/toml',
+                    '-I./src/plummet/internal/new/internal/toolchain',
+                    '-I./src/plummet/internal/new/internal/toolchain/templates',
+
                     # LLVM config flags
 
                     '-I/usr/include',
