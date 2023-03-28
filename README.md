@@ -10,6 +10,18 @@
 
 This repo is under a large rework. I will be messy for a little bit while I sort things out.
 
+## Dependences
+
+### Compiling
+
+- LLVM 14
+- Clang 15.x.x (Not sure what the minimum version is, I am using 15.x.x and would recommend it for best support)
+
+### Developing
+
+- Everything above
+- mingw-w64-gcc
+
 ## TODO
 
 - [ ] Fix file/class names
