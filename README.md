@@ -26,3 +26,13 @@ This repo is under a large rework. I will be messy for a little bit while I sort
 
 - [ ] Fix file/class names
 - [ ] Write unit tests for all sub functions in compiler/internal/
+- [ ] Write log util class
+- [ ] Move error class from compiler/internal/ to utils, edit and write unit tests.
+- [ ] Define subset of TOML, write unit tests & test files, finish TOML parser
+- [ ] Finish tool chain automation
+- [ ] Write unit tests for explain and finish writing interface for explain
+- [ ] Finish writing help sub command
+- [ ] Finish adding symbols to lexer
+- [ ] Sketch out ast on paper
+- [ ] Move optimization routines from lex to either a new class or parser
+- [ ] Update documentation on Google drive
