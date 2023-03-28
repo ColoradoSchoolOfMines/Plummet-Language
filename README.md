@@ -9,3 +9,8 @@
 ## Project Notice
 
 This repo is under a large rework. I will be messy for a little bit while I sort things out.
+
+## TODO
+
+- [ ] Fix file/class names
+- [ ] Write unit tests for all sub functions in compiler/internal/
