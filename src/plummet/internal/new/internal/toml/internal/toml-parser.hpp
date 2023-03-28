@@ -29,14 +29,14 @@ class tomlParser {
 			tomlVariable(std::string name, tomlLiteral value) : name(name), value(value) {}
 		};
 
-		struct tomlFile {
+		static struct {
 			std::unordered_map<std::string, std::vector<tomlVariable>> tables = {
 				{ "project",
 					std::vector<tomlVariable>() = {
 						tomlVariable("name", tomlLiteral(std::vector<std::string>() = { "test" }, _STRING)),
 					} },
 			};
-		};
+		} tomlFile;
 
 	public:
 		/*
@@ -46,6 +46,19 @@ class tomlParser {
 			return lex.getTokens();
 		}
 		*/
+
+		void prettyPrint() {
+			for (auto& table : tomlFile.tables) {
+				std::cout << "[" << table.first << "]" << std::endl;
+				for (auto& variable : table.second) {
+					std::cout << variable.name << " = ";
+					for (auto& value : variable.value.values) {
+						std::cout << value << " ";
+					}
+					std::cout << std::endl;
+				}
+			}
+		}
 };
 
 #endif // TOML_HPP

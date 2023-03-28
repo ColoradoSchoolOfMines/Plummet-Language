@@ -1,4 +1,3 @@
-// if PLUMMET_MAIN is defined, exclude this file from the build
 #ifndef PLUMMET_MAIN
 
 #include <iostream>

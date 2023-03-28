@@ -29,6 +29,9 @@ def Settings( **kwargs ):
                     '-I./src/plummet/internal/new/internal/toolchain',
                     '-I./src/plummet/internal/new/internal/toolchain/internal',
 
+                    '-I./src/utils/test-suite',
+                    '-I./src/utils/cli-colors',
+
                     # LLVM config flags
 
                     '-I/usr/include',
