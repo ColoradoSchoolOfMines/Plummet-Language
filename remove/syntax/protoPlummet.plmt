@@ -1,0 +1,4 @@
+struct result<T> = {
+	T data,
+	bool success
+}

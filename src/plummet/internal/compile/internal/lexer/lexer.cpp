@@ -7,7 +7,7 @@
 
 #include "lexer.hpp"
 #include "token.hpp"
-#include "error.hpp"
+#include "ErrorHandler.hpp"
 
 /*
  * Lexer class member functions
@@ -302,7 +302,7 @@ void lexer::lexFile()
 							tempString += '\\';
 							tempString += lastChar;
 
-							error e;
+							ErrorHandler e;
 							e.fileError(this->fileName, this->lineNumber, this->columnNumber,
 									"Invalid escape sequence: \\" + std::string(1, lastChar));
 
@@ -352,7 +352,7 @@ void lexer::lexFile()
 							tempString += '\\';
 							tempString += lastChar;
 
-							error e;
+							ErrorHandler e;
 							e.fileError(this->fileName, this->lineNumber, this->columnNumber,
 									"Invalid escape sequence: \\" + std::string(1, lastChar));
 
@@ -387,7 +387,7 @@ void lexer::lexFile()
 				{
 					if (decimal)
 					{
-						error e;
+						ErrorHandler e;
 						e.fileError(this->fileName, this->lineNumber, this->columnNumber, "Lexer Error: Invalid number literal");
 					}
 					decimal = true;

@@ -18,7 +18,7 @@ token::token(tokenType type, const std::string& value, size_t lineNumber, size_t
 		{ tokenType::stringLiteral, "stringLiteral" },
 
 		{ tokenType::identifier, "identifier" },
-		{ tokenType::semicolon, "semicolon" },
+		{ tokenType::modifier, "modifier" },
 
 		{ tokenType::openParenthesis, "openParenthesis" },
 		{ tokenType::closeParenthesis, "closeParenthesis" },
@@ -26,6 +26,7 @@ token::token(tokenType type, const std::string& value, size_t lineNumber, size_t
 		{ tokenType::closeBracket, "closeBracket" },
 		{ tokenType::openBrace, "openBrace" },
 		{ tokenType::closeBrace, "closeBrace" },
+		{ tokenType::vbar, "verticalBar" },
 
 		{ tokenType::plusSign, "plusSign" },
 		{ tokenType::minusSign, "minusSign" },
@@ -33,7 +34,38 @@ token::token(tokenType type, const std::string& value, size_t lineNumber, size_t
 		{ tokenType::divideSign, "divideSign" },
 		{ tokenType::moduloSign, "moduloSign" },
 
+		{ tokenType::plusPlusSign, "plusPlusSign" },
+		{ tokenType::minusMinusSign, "minusMinusSign" },
+		{ tokenType::plusEqualSign, "plusEqualSign" },
+		{ tokenType::minusEqualSign, "minusEqualSign" },
+		{ tokenType::multiplyEqualSign, "multiplyEqualSign" },
+		{ tokenType::divideEqualSign, "divideEqualSign" },
+		{ tokenType::moduloEqualSign, "moduloEqualSign" },
+
 		{ tokenType::equalSign, "equalSign" },
+
+		{ tokenType::equalEqualSign, "equalEqualSign" },
+		{ tokenType::notEqualSign, "notEqualSign" },
+		{ tokenType::greaterThanSign, "greaterThanSign" },
+		{ tokenType::greaterEqualSign, "greaterEqualSign" },
+		{ tokenType::lessThanSign, "lessThanSign" },
+		{ tokenType::lessEqualSign, "lessEqualSign" },
+
+		{ tokenType::andSign, "andSign" },
+		{ tokenType::orSign, "orSign" },
+		{ tokenType::notSign, "notSign" },
+
+		{ tokenType::questionMark, "questionMark" },
+		{ tokenType::semicolon, "semicolon" },
+		{ tokenType::colon, "colon" },
+		{ tokenType::comma, "comma" },
+		{ tokenType::dot, "dot" },
+
+		{ tokenType::derefSign, "derefSign" },
+		{ tokenType::refSign, "refSign" },
+
+		{ tokenType::optimizationToken, "optimizationToken" },
+		{ tokenType::emptyToken, "emptyToken" },
 	};
 }
 

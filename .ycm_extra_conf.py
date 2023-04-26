@@ -19,7 +19,6 @@ def Settings( **kwargs ):
 
                     '-I./src/plummet/internal/compile/internal/driver',
                     '-I./src/plummet/internal/compile/internal/lexer',
-                    '-I./src/plummet/internal/compile/internal/error',
                     '-I./src/plummet/internal/compile/internal/token',
                     '-I./src/plummet/internal/compile/internal/ast',
 
@@ -31,6 +30,7 @@ def Settings( **kwargs ):
 
                     '-I./src/utils/test-suite',
                     '-I./src/utils/cli-colors',
+                    '-I./src/utils/error-handler',
 
                     # LLVM config flags
 

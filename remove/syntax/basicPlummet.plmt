@@ -1,0 +1,25 @@
+# Import functions from C
+int putchar = external("putchar", [int])
+int getchar = external("getchar", [])
+
+unsafe {
+	struct io = {
+		void write = function(string message) {
+			for (string char in message) {
+				putchar(char)
+			}
+		}
+
+		string read() = function() {
+			string result
+
+				string char = getchar()
+				while (char != "\n") {
+					result += char
+					char = getchar()
+				}
+
+			return result
+		}
+	}
+}

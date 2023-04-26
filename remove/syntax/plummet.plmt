@@ -1,14 +1,24 @@
-function main(): int => {
+import plummet.io
+import plummet.result
+import plummet.system
+
+struct class = [
+	function functions = []
+]
+
+result<int> getNumber = function(string message) {
+	io.write(message)
+	return io.read().parseInt()
 }
 
-fn <int, void> main() {
-}
+void main = function(string[] args) {
+	int numOne = getNumber("Enter a number: ").handle(function() {
+		io.write("Error: parsed a bad string for a integer")
+		system.exit(1)
+	})
 
-func main() ==<int>=={
-}
-
-int main() {
-}
-
-fn main() => <int, exception> {
+	int numTwo = getNumber("Enter another number: ").handle(function() {
+		io.write("Error: parsed a bad string for a integer")
+		system.exit(1)
+	})
 }

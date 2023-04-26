@@ -1,8 +1,9 @@
 #include <iostream>
 
-int readInt() asm("readInt");
+extern "C" int readInt() asm("readInt");
 int readInt() {
 	int a;
+	std::cout << "> ";
 	std::cin >> a;
 	return a;
 }

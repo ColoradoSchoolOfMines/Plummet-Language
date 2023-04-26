@@ -1,0 +1,8 @@
+string getString = external("getString", [])
+void printString = external("printString", [string])
+
+int main = function() {
+	string temp = getString()
+	printString(temp)
+	return 0
+}
