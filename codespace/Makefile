@@ -5,5 +5,4 @@ all:
 	@echo "type -> :PlugInstall into vim"
 	@bash -c 'read -p "press enter key to continue"'
 	@vim ~/.vimrc
-	@./complete.sh
 	@source ./alias.sh
