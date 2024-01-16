@@ -129,14 +129,14 @@ int main(int argc, char** argv) {
         "compile",
         "explain",
         "new",
-        "pkg",
+        "package",
     };
 
     const std::vector<std::string> subcommandCommands = {
         "echo 'compile called'",
         "python3 ./explain.py",
         "python3 ./new.py",
-        "echo 'pkg called'",
+        "python3 ./package.py",
     };
 
     const std::vector<std::string> subcommandHelp = {
