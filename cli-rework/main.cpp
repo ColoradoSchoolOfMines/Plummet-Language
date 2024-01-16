@@ -1,32 +1,95 @@
 #include <iostream>
+#include <utility>
 #include <string>
 #include <vector>
+#include <sstream>
 #include <unordered_map>
-#include <utility>
 
 #include "jaro.hpp"
+
+#define PLUMMET_VERSION_MAJOR 0
+#define PLUMMET_VERSION_MINOR 0
+#define PLUMMET_VERSION_PATCH 0
+
+void versionCommand() {
+    std::cout
+    << "Plummet version: "
+    << PLUMMET_VERSION_MAJOR
+    << "."
+    << PLUMMET_VERSION_MINOR
+    << "."
+    << PLUMMET_VERSION_PATCH
+    << std::endl;
+}
+
+// Refactor this to not need parameters to be passed in
+void helpCommand(
+    const std::string& programName,
+    const std::vector<std::string>& subcommandNames,
+    const std::vector<std::string>& subcommandHelp
+) {
+    std::cout
+    << "Usage: "
+    << programName
+    << " <subcommand> [flags]"
+    << std::endl;
+    
+    std::cout << "Subcommands:" << std::endl;
+    
+    for (int i = 0; i < subcommandNames.size(); i++) {
+        std::cout
+        << "    "
+        << subcommandNames[i]
+        << " - "
+        << subcommandHelp[i]
+        << std::endl;
+    }
+}
 
 template <typename T> struct Result {
     T value;
     bool success;
 
-    // TODO: make this return the result so that the user can call a function on it that may make the program exit rather allways exit the program
+    // TODO: use color lib to make the error message red for posix environments
+    // TODO: modify color lib to use https://www.computerhope.com/color.htm for
+    //       windows compatibility
     T unwrap(std::string errorMessage) {
         if (success) { return value; }
         throw std::runtime_error(errorMessage);
     }
+
+    Result<T> onFailHelpCommand(
+        const std::string& programName,
+        const std::vector<std::string>& subcommandNames,
+        const std::vector<std::string>& subcommandHelp
+    ) {
+        if (success) { return *this; }
+        helpCommand(programName, subcommandNames, subcommandHelp);
+        return *this;
+    }
 };
 
-Result<int> executeSubcommand(const std::string& subcommand) {
-    int returnCode = system(subcommand.c_str());
+// NOTE: if return code is 4, the program recieved incorrect flags
+Result<int> executeSubcommand(std::string subcommand, std::string args) {
+    int returnCode = system((subcommand + " " + args).c_str());
+
+    // NOTE: get top 8 bits of return code to convert into int this usually is
+    //       done with sys/wait.h -- WEXITSTATUS
+    returnCode = returnCode >> 8;
+
     return Result<int>{returnCode, returnCode == 0};
 }
 
-// TODO: Make this check for multiple subcommands if there exists two sub commands equadistant from the unrecognized subcommand
+// TODO: Make this check for multiple subcommands if there exists two sub
+//       commands equadistant from the unrecognized subcommand
 Result<std::string> findClosestSubcommand(
-    const std::vector<std::string>& subcommandNames,
+    std::vector<std::string> subcommandNames,
     const std::string& unrecognizedSubcommand
 ) {
+    // Add builtin commands to the possible subcommand names
+
+    subcommandNames.push_back("help");
+    subcommandNames.push_back("version");
 
     // Find the closest subcommand(s) to the unrecognized subcommand
 
@@ -38,6 +101,12 @@ Result<std::string> findClosestSubcommand(
             closestSubcommand = subcommandName;
             closestDistance = distance;
         }
+    }
+
+    // If there is a direct match, return match and true
+
+    if (closestDistance == 1.0) {
+        return Result<std::string>{closestSubcommand, true};
     }
 
     // See if the user meant to type the closest subcommand
@@ -54,32 +123,39 @@ Result<std::string> findClosestSubcommand(
 
 int main(int argc, char** argv) {
 
-    // Construct subcommands vectors (names and commands)
+    // Construct subcommands vectors (names, commands, and help messages)
 
     const std::vector<std::string> subcommandNames = {
         "compile",
         "explain",
-        "help",
         "new",
-        "version",
         "pkg",
     };
 
     const std::vector<std::string> subcommandCommands = {
         "echo 'compile called'",
         "python3 ./explain.py",
-        "echo 'help called'",
-        "echo 'new called'",
-        "echo 'version called'",
+        "python3 ./new.py",
         "echo 'pkg called'",
+    };
+
+    const std::vector<std::string> subcommandHelp = {
+        "Compile a file",
+        "Explain an error",
+        "Display help",
+        "Create a new project",
+        "Display version",
+        "Manage packages",
     };
 
     // Ensure subcommands vectors are the same size
 
     if (subcommandNames.size() != subcommandCommands.size()) {
-        std::cout << "subcommandNames.size(): " << subcommandNames.size() << std::endl;
-        std::cout << "subcommandCommands.size(): " << subcommandCommands.size() << std::endl;
-
+        std::cout
+        << "subcommandNames.size(): " << subcommandNames.size()
+        << "subcommandCommands.size(): " << subcommandCommands.size()
+        << std::endl;
+        
         throw std::runtime_error(
             "subcommandNames and subcommandCommands must be the same size"
         );
@@ -98,34 +174,54 @@ int main(int argc, char** argv) {
 
     // Parse command line arguments
 
-    // ngl; no clue how this constructor works :/
     std::vector<std::string> args(argv, argv + argc);
 
     if (args.size() < 2) {
         std::cout << "No subcommand provided" << std::endl;
-        // TODO: call help subcommand
+        helpCommand(args[0], subcommandNames, subcommandHelp);
         return 1;
     }
 
     // TODO: check if flags format is correct
 
     std::string subcommand = args[1];
+    
+    subcommand = findClosestSubcommand(
+        subcommandNames,
+        subcommand
+    ).onFailHelpCommand(
+        args[0],
+        subcommandNames,
+        subcommandHelp
+    ).unwrap("Unknown subcommand: " + subcommand); // TODO: call help subcommand
 
-    if (subcommands.find(subcommand) == subcommands.end()) {
+    // Handle built in subcommands
 
-        // Find the closest subcommand to the unrecognized subcommand
-        subcommand = findClosestSubcommand(
-            subcommandNames,
-            subcommand
-        ).unwrap("Unknown subcommand: " + subcommand);
-
-        // TODO: call help subcommand
+    // TODO: make builtin commands easier to scale as the project gets bigger
+    //       to do this use a map and pass it around
+    if (subcommand == "help") {
+        helpCommand(args[0], subcommandNames, subcommandHelp);
+        return 0;
     }
 
-    // TODO: Make a way for this to be able to conditionally print the value so that the exit code can be displayed
-    executeSubcommand(subcommands[subcommand]).unwrap(
-        "Subcommand failed"
+    if (subcommand == "version") {
+        versionCommand();
+        return 0;
+    }
+
+    // Construct subcommand arguments into an easy to parse string
+
+    std::stringstream ss;
+    for (std::string s: std::vector<std::string>(args.begin() + 2, args.end())) {
+        ss << s << " ";
+    }
+
+    Result<int> result = executeSubcommand(
+        subcommands[subcommand],
+        ss.str()
     );
+
+    result.unwrap("Subcommand failed with exit code: " + std::to_string(result.value));
 
     return 0;
 }

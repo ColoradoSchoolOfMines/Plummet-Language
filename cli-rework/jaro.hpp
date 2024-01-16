@@ -19,7 +19,8 @@ namespace jaro {
         bool* s1Matches = new bool[s1Length];
         bool* s2Matches = new bool[s2Length];
 
-        // NOTE: I had to add this due to something weird happening in the memory
+        // NOTE: I had to add this due to the way c++ initializes arrays, this
+        //       ensures that all values are false before anything else happens
         for (int i = 0; i < s1Length; i++) { s1Matches[i] = false; }
         for (int i = 0; i < s2Length; i++) { s2Matches[i] = false; }
 
