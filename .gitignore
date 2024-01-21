@@ -1,3 +1,7 @@
 **/a.out
 **/a.exe
 .vscode
+**/__pycache__
+**/*.pyc
+**/plummet_dev
+**/plummet

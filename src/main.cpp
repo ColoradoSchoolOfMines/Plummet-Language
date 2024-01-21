@@ -11,6 +11,19 @@
 #define PLUMMET_VERSION_MINOR 0
 #define PLUMMET_VERSION_PATCH 0
 
+// NOTE: Define PLUMMET_ROOT for the project; if it is defined manually, it will
+//       not be defined using this procedure
+
+#ifndef PLUMMET_ROOT
+    #ifdef __linux__
+        #define PLUMMET_ROOT "/opt/plummet" // NOTE: symlink to /usr/local/bin/plummet at install time
+    #elif defined(_WIN32) || defined(WIN32)
+        #define PLUMMET_ROOT "C:\\Program Files\\Plummet"
+    #else // Not linux or windows
+        #error "Unsupported platform"
+    #endif // __linux__
+#endif // PLUMMET_ROOT
+
 void versionCommand() {
     std::cout
     << "Plummet version: "
@@ -22,7 +35,7 @@ void versionCommand() {
     << std::endl;
 }
 
-// Refactor this to not need parameters to be passed in
+// TODO: Refactor this to not need parameters to be passed in
 void helpCommand(
     const std::string& programName,
     const std::vector<std::string>& subcommandNames,
@@ -133,10 +146,10 @@ int main(int argc, char** argv) {
     };
 
     const std::vector<std::string> subcommandCommands = {
-        "echo 'compile called'",
-        "python3 ./explain.py",
-        "python3 ./new.py",
-        "python3 ./package.py",
+        "cat " PLUMMET_ROOT "/src/compile/compile.temp",
+        "python3 " PLUMMET_ROOT "/src/explain/explain.py",
+        "python3 " PLUMMET_ROOT "/src/new/new.py",
+        "python3 " PLUMMET_ROOT "/src/package/package.py",
     };
 
     const std::vector<std::string> subcommandHelp = {
@@ -153,6 +166,7 @@ int main(int argc, char** argv) {
     if (subcommandNames.size() != subcommandCommands.size()) {
         std::cout
         << "subcommandNames.size(): " << subcommandNames.size()
+        << "\n"
         << "subcommandCommands.size(): " << subcommandCommands.size()
         << std::endl;
         
@@ -193,7 +207,7 @@ int main(int argc, char** argv) {
         args[0],
         subcommandNames,
         subcommandHelp
-    ).unwrap("Unknown subcommand: " + subcommand); // TODO: call help subcommand
+    ).unwrap("Unknown subcommand: " + subcommand);
 
     // Handle built in subcommands
 
@@ -220,6 +234,16 @@ int main(int argc, char** argv) {
         subcommands[subcommand],
         ss.str()
     );
+
+    if (result.value == 4) {
+        std::cout << "Subcommand failed due to: Incorrect Flags" << std::endl;
+        return 1;
+    }
+
+    if (result.value == 5) {
+        std::cout << "Subcommand failed due to: Undefined Behavior" << std::endl;
+        return 1;
+    }
 
     result.unwrap("Subcommand failed with exit code: " + std::to_string(result.value));
 
