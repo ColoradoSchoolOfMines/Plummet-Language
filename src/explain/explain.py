@@ -4,7 +4,7 @@ import sys
 FILE_LOCATION: str = os.path.dirname(__file__)
 
 def helpCommand():
-    print("Usage: Subcommand: explain [error code]")
+    print("Usage: Subcommand: explain [error code | help]")
 
 
 def get_error_messages() -> list[str]:

@@ -1,86 +1,23 @@
 #include <iostream>
-#include <utility>
 #include <string>
 #include <vector>
 #include <sstream>
-#include <unordered_map>
 
 #include "jaro.hpp"
-
-#define PLUMMET_VERSION_MAJOR 0
-#define PLUMMET_VERSION_MINOR 0
-#define PLUMMET_VERSION_PATCH 0
-
-// NOTE: Define PLUMMET_ROOT for the project; if it is defined manually, it will
-//       not be defined using this procedure
-
-#ifndef PLUMMET_ROOT
-    #ifdef __linux__
-        #define PLUMMET_ROOT "/opt/plummet" // NOTE: symlink to /usr/local/bin/plummet at install time
-    #elif defined(_WIN32) || defined(WIN32)
-        #define PLUMMET_ROOT "C:\\Program Files\\Plummet"
-    #else // Not linux or windows
-        #error "Unsupported platform"
-    #endif // __linux__
-#endif // PLUMMET_ROOT
+#include "Result.hpp"
+#include "helpCommand.hpp"
+#include "GlobalVariables.hpp"
 
 void versionCommand() {
     std::cout
     << "Plummet version: "
-    << PLUMMET_VERSION_MAJOR
+    << GlobalVariables::PLUMMET_VERSION_MAJOR
     << "."
-    << PLUMMET_VERSION_MINOR
+    << GlobalVariables::PLUMMET_VERSION_MINOR
     << "."
-    << PLUMMET_VERSION_PATCH
+    << GlobalVariables::PLUMMET_VERSION_PATCH
     << std::endl;
 }
-
-// TODO: Refactor this to not need parameters to be passed in
-void helpCommand(
-    const std::string& programName,
-    const std::vector<std::string>& subcommandNames,
-    const std::vector<std::string>& subcommandHelp
-) {
-    std::cout
-    << "Usage: "
-    << programName
-    << " <subcommand> [flags]"
-    << std::endl;
-    
-    std::cout << "Subcommands:" << std::endl;
-    
-    for (int i = 0; i < subcommandNames.size(); i++) {
-        std::cout
-        << "    "
-        << subcommandNames[i]
-        << " - "
-        << subcommandHelp[i]
-        << std::endl;
-    }
-}
-
-template <typename T> struct Result {
-    T value;
-    bool success;
-
-    // TODO: use color lib to make the error message red for posix environments
-    // TODO: modify color lib to use https://www.computerhope.com/color.htm for
-    //       windows compatibility
-    T unwrap(std::string errorMessage) {
-        if (success) { return value; }
-        throw std::runtime_error(errorMessage);
-    }
-
-    Result<T> onFailHelpCommand(
-        const std::string& programName,
-        const std::vector<std::string>& subcommandNames,
-        const std::vector<std::string>& subcommandHelp
-    ) {
-        if (success) { return *this; }
-        helpCommand(programName, subcommandNames, subcommandHelp);
-        return *this;
-    }
-};
 
 // NOTE: if return code is 4, the program recieved incorrect flags
 Result<int> executeSubcommand(std::string subcommand, std::string args) {
@@ -136,38 +73,19 @@ Result<std::string> findClosestSubcommand(
 
 int main(int argc, char** argv) {
 
-    // Construct subcommands vectors (names, commands, and help messages)
+    // Initialize global variables
 
-    const std::vector<std::string> subcommandNames = {
-        "compile",
-        "explain",
-        "new",
-        "package",
-    };
-
-    const std::vector<std::string> subcommandCommands = {
-        "cat " PLUMMET_ROOT "/src/compile/compile.temp",
-        "python3 " PLUMMET_ROOT "/src/explain/explain.py",
-        "python3 " PLUMMET_ROOT "/src/new/new.py",
-        "python3 " PLUMMET_ROOT "/src/package/package.py",
-    };
-
-    const std::vector<std::string> subcommandHelp = {
-        "Compile a file",
-        "Explain an error",
-        "Display help",
-        "Create a new project",
-        "Display version",
-        "Manage packages",
-    };
+    GlobalVariables::init(argv[0]);
 
     // Ensure subcommands vectors are the same size
 
-    if (subcommandNames.size() != subcommandCommands.size()) {
+    if (GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size() != GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS.size()) {
         std::cout
-        << "subcommandNames.size(): " << subcommandNames.size()
+        << "subcommandNames.size(): "
+        << GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size()
         << "\n"
-        << "subcommandCommands.size(): " << subcommandCommands.size()
+        << "subcommandCommands.size(): "
+        << GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS.size()
         << std::endl;
         
         throw std::runtime_error(
@@ -175,46 +93,38 @@ int main(int argc, char** argv) {
         );
     }
 
-    // Construct subcommands map
-
-    std::unordered_map<std::string, std::string> subcommands;
-
-    for (int i = 0; i < subcommandNames.size(); i++) {
-        subcommands.insert(std::make_pair(
-            subcommandNames[i],
-            subcommandCommands[i]
-        ));
-    }
-
     // Parse command line arguments
 
     std::vector<std::string> args(argv, argv + argc);
 
     if (args.size() < 2) {
-        std::cout << "No subcommand provided" << std::endl;
-        helpCommand(args[0], subcommandNames, subcommandHelp);
+        std::cout << "Error: No subcommand provided" << std::endl;
+        helpCommand::print();
         return 1;
     }
 
     // TODO: check if flags format is correct
 
     std::string subcommand = args[1];
-    
-    subcommand = findClosestSubcommand(
-        subcommandNames,
+
+    Result<std::string> subcommandResult = findClosestSubcommand(
+        GlobalVariables::PLUMMET_SUBCOMMAND_NAMES,
         subcommand
-    ).onFailHelpCommand(
-        args[0],
-        subcommandNames,
-        subcommandHelp
-    ).unwrap("Unknown subcommand: " + subcommand);
+    );
+
+    if (!subcommandResult.success) {
+        helpCommand::print();
+        return 1;
+    }
+
+    subcommand = subcommandResult.unwrap("Unknown subcommand: " + subcommand);
 
     // Handle built in subcommands
 
     // TODO: make builtin commands easier to scale as the project gets bigger
     //       to do this use a map and pass it around
     if (subcommand == "help") {
-        helpCommand(args[0], subcommandNames, subcommandHelp);
+        helpCommand::print();
         return 0;
     }
 
@@ -231,7 +141,7 @@ int main(int argc, char** argv) {
     }
 
     Result<int> result = executeSubcommand(
-        subcommands[subcommand],
+        GlobalVariables::PLUMMET_SUBCOMMANDS[subcommand],
         ss.str()
     );
 
