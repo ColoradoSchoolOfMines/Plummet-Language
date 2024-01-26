@@ -3,7 +3,7 @@ import sys
 
 FILE_LOCATION: str = os.path.dirname(__file__)
 
-def helpCommand():
+def help_command():
     print("Usage: Subcommand: explain [error code | help]")
 
 
@@ -22,11 +22,11 @@ def print_error_message(code: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "help":
-        helpCommand()
+        help_command()
         sys.exit(0)
 
     if len(sys.argv) != 2:
-        helpCommand()
+        help_command()
         sys.exit(4)
 
     error_code: str = sys.argv[1]

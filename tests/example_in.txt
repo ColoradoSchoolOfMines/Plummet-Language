@@ -1,0 +1,12 @@
+Example Test
+echo "This is an example test, view the source at tests/example_*.txt to see how it works."
+
+File rules:
+    Tests must be in the tests/test_files/ directory
+    All tests must follow the naming convention of [number]_[in/out].txt
+    The number must be unique, and the in/out must be either in or out
+
+Syntax rules:
+    The first line must be the name of the test
+    The second line must be the command to run, this has to only be a single line
+    Anything past these lines is ignored, and can be used for comments (as seen here)

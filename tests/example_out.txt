@@ -1,0 +1,1 @@
+This is an example test, view the source at tests/example_*.txt to see how it works.

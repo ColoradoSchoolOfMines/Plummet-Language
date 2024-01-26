@@ -64,6 +64,11 @@ If you are a contributor, you know where to reach me. Please send me a message t
     - `plummet package help` - Display help information for the package subcommand
     - More to come!
 
+- `tests/run_tests.py` This subcommand must be run from the root directory of the project. It also depends on the dev build of the plummet command being in the root directory of the project. It is usually better to invoke this command from the Makefile in the root directory of the project.
+    - `python3 tests/run_tests.py help` - Display help information for the run\_tests.py subcommand
+    - `python3 tests/run_tests.py example` - Run the example test
+    - `python3 tests/run_tests.py <test number>` - Run a specific test
+
 ### Extra Arguments
 
 - `PLUMMET_AUTO_CORRECT=0` can be used to disable the suggestion feature of the main command. If a subcommand is incorrectly typed, the program will suggest the correct subcommand.
