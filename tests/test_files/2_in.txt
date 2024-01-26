@@ -1,0 +1,2 @@
+auto complete off and invalid subcommand
+PLUMMET_AUTO_CORRECT=0 ./plummet_dev mew

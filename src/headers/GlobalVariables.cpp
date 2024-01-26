@@ -31,15 +31,15 @@ const std::vector<std::string> GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS = {
     "python3 " PLUMMET_ROOT "/src/package/package.py",
 };
 
-std::unordered_map<std::string, std::string> GlobalVariables::PLUMMET_SUBCOMMANDS;
-
 const std::string GlobalVariables::PLUMMET_VERSION_MAJOR = "0";
 const std::string GlobalVariables::PLUMMET_VERSION_MINOR = "0";
 const std::string GlobalVariables::PLUMMET_VERSION_PATCH = "0";
 
+std::unordered_map<std::string, std::string> GlobalVariables::PLUMMET_SUBCOMMANDS;
 std::string GlobalVariables::PLUMMET_EXECUTABLE_NAME;
+bool GlobalVariables::PLUMMET_AUTO_COMPLETE;
 
-void GlobalVariables::init(const std::string& executableName) {
+void GlobalVariables::init(const std::string& executableName, bool autoComplete) {
     // Initialize subcommands map
     for (int i = 0; i < GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size(); i++) {
         GlobalVariables::PLUMMET_SUBCOMMANDS.insert(std::make_pair(
@@ -50,4 +50,7 @@ void GlobalVariables::init(const std::string& executableName) {
 
     // Initialize executable name
     GlobalVariables::PLUMMET_EXECUTABLE_NAME = executableName;
+
+    // Initialize auto complete
+    GlobalVariables::PLUMMET_AUTO_COMPLETE = autoComplete;
 }

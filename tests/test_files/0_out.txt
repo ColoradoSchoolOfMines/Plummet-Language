@@ -1,0 +1,10 @@
+Error: No subcommand provided
+Usage: ./plummet_dev <built in | subcommand> [flags]
+Built in subcommands:
+    help - Print this help message
+    version - Print the version of Plummet
+Subcommands:
+    compile - cat /home/breadleaf/plummet-language/src/compile/compile.temp
+    explain - python3 /home/breadleaf/plummet-language/src/explain/explain.py
+    new - python3 /home/breadleaf/plummet-language/src/new/new.py
+    package - python3 /home/breadleaf/plummet-language/src/package/package.py

@@ -1,0 +1,2 @@
+command no parameters
+./plummet_dev

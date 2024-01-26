@@ -35,15 +35,16 @@ struct GlobalVariables {
     static const std::vector<std::string> PLUMMET_SUBCOMMAND_HELP;
     static const std::vector<std::string> PLUMMET_SUBCOMMAND_COMMANDS;
 
-    static std::unordered_map<std::string, std::string> PLUMMET_SUBCOMMANDS;
-
     static const std::string PLUMMET_VERSION_MAJOR;
     static const std::string PLUMMET_VERSION_MINOR;
     static const std::string PLUMMET_VERSION_PATCH;
 
+    static std::unordered_map<std::string, std::string> PLUMMET_SUBCOMMANDS;
     static std::string PLUMMET_EXECUTABLE_NAME;
+    static bool PLUMMET_AUTO_COMPLETE;
 
-    static void init(const std::string& executableName);
+    static void init(const std::string& executableName, bool autoComplete);
+
 };
 
 #endif // GLOBALVARIABLES_HPP

@@ -1,0 +1,8 @@
+Example Test
+echo "This is an example test, view the source to see how it works."
+
+This file has a specific syntax, that being the following:
+The first line must be the name of the test
+The second line must be the command to run, this has to only be a single line
+Anything past this is ignored, and can be used for comments (as seen here)
+NOTE: TESTS MUST BE IN THE TESTS FOLDER!!

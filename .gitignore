@@ -5,3 +5,4 @@
 **/*.pyc
 **/plummet_dev
 **/plummet
+tests/diffs/*.txt

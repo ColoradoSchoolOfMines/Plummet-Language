@@ -1,0 +1,2 @@
+test new subcommand without flags
+./plummet_dev new

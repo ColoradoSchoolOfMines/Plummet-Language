@@ -36,6 +36,13 @@ Result<std::string> findClosestSubcommand(
     std::vector<std::string> subcommandNames,
     const std::string& unrecognizedSubcommand
 ) {
+    // If auto complete is not enabled, return the unrecognized subcommand with
+    // false as the second value
+
+    if (!GlobalVariables::PLUMMET_AUTO_COMPLETE) {
+        return Result<std::string>{unrecognizedSubcommand, false};
+    }
+
     // Add builtin commands to the possible subcommand names
 
     subcommandNames.push_back("help");
@@ -71,11 +78,22 @@ Result<std::string> findClosestSubcommand(
     };
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, char** envp) {
+
+    // Check if PLUMMET_AUTO_CORRECT is set to 1 or 0 or not set
+    // if it is not set, default to 1
+
+    bool autoComplete = true;
+
+    if (getenv("PLUMMET_AUTO_CORRECT") != NULL) {
+        if (getenv("PLUMMET_AUTO_CORRECT")[0] == '0') {
+            autoComplete = false;
+        }
+    }
 
     // Initialize global variables
 
-    GlobalVariables::init(argv[0]);
+    GlobalVariables::init(argv[0], autoComplete);
 
     // Ensure subcommands vectors are the same size
 
@@ -107,6 +125,8 @@ int main(int argc, char** argv) {
 
     std::string subcommand = args[1];
 
+    // Check if auto complete is enabled
+
     Result<std::string> subcommandResult = findClosestSubcommand(
         GlobalVariables::PLUMMET_SUBCOMMAND_NAMES,
         subcommand
@@ -114,10 +134,12 @@ int main(int argc, char** argv) {
 
     if (!subcommandResult.success) {
         helpCommand::print();
-        return 1;
     }
 
-    subcommand = subcommandResult.unwrap("Unknown subcommand: " + subcommand);
+    subcommand = subcommandResult.unwrap(
+        "Unknown subcommand: " + subcommand,
+        1
+    );
 
     // Handle built in subcommands
 
@@ -155,7 +177,10 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    result.unwrap("Subcommand failed with exit code: " + std::to_string(result.value));
+    result.unwrap(
+        "Subcommand failed with exit code: " + std::to_string(result.value),
+        1
+    );
 
     return 0;
 }

@@ -17,9 +17,11 @@ template <typename T> struct Result {
     // TODO: use color lib to make the error message red for posix environments
     // TODO: modify color lib to use https://www.computerhope.com/color.htm for
     //       windows compatibility
-    T unwrap(std::string errorMessage) {
+    T unwrap(std::string errorMessage, int exitCode) {
         if (success) { return value; }
-        throw std::runtime_error(errorMessage);
+        // throw std::runtime_error(errorMessage);
+        std::cerr << errorMessage << std::endl;
+        exit(exitCode);
     }
 };
 

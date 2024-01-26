@@ -1,0 +1,2 @@
+help subcommand
+./plummet_dev help
