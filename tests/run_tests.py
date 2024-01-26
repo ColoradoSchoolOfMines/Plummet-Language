@@ -112,7 +112,7 @@ def run_single_test(test_number: int) -> None:
         input_file, output_file, int(test_number)
     )
 
-    print_failed_tests([test_result])
+    print_failed_tests([test_result] if not test_result.result else [])
 
 
 def run_all_tests() -> None:
