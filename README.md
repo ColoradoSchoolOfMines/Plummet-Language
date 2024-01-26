@@ -26,18 +26,14 @@ If you are a contributor, you know where to reach me. Please send me a message t
 
 ## TODO
 
-- [ ] PROD UNIT TESTS ARE USELESS!!! REMOVE THEM AND EDIT run\_tests.py
-- [ ] ADD FAILED TESTS EDIT run\_tests.py
 - [ ] Fix file/class names
 - [ ] Write log util class
 - [ ] Move error class from compiler/internal/ to utils, edit and write unit tests.
 - [ ] Define subset of TOML, write unit tests & test files, finish TOML parser
-- [ ] Finish tool chain automation
-- [ ] Write unit tests for explain and finish writing interface for explain
 - [ ] Finish adding symbols to lexer
 - [ ] Sketch out ast on paper
 - [ ] Move optimization routines from lex to either a new class or parser
-- [ ] Update documentation on Google drive
+- [ ] Update documentation on Google drive [TODO: End of Febuary]
 
 ## Plummet Command/Subcommands and Extra Arguments
 
