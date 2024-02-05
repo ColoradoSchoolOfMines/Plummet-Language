@@ -3,10 +3,11 @@
 #include <vector>
 #include <sstream>
 
-#include "jaro.hpp"
-#include "Result.hpp"
-#include "helpCommand.hpp"
-#include "GlobalVariables.hpp"
+#include "compile/driver.hpp"
+#include "headers/jaro.hpp"
+#include "headers/Result.hpp"
+#include "headers/helpCommand.hpp"
+#include "headers/GlobalVariables.hpp"
 
 void versionCommand() {
     std::cout
@@ -45,8 +46,9 @@ Result<std::string> findClosestSubcommand(
 
     // Add builtin commands to the possible subcommand names
 
-    subcommandNames.push_back("help");
-    subcommandNames.push_back("version");
+    for (const std::string& builtinSubcommand : GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES) {
+        subcommandNames.push_back(builtinSubcommand);
+    }
 
     // Find the closest subcommand(s) to the unrecognized subcommand
 
@@ -78,7 +80,7 @@ Result<std::string> findClosestSubcommand(
     };
 }
 
-int main(int argc, char** argv, char** envp) {
+int main(int argc, char** argv) {
 
     // Check if PLUMMET_AUTO_CORRECT is set to 1 or 0 or not set
     // if it is not set, default to 1
@@ -99,15 +101,15 @@ int main(int argc, char** argv, char** envp) {
 
     if (GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size() != GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS.size()) {
         std::cout
-        << "subcommandNames.size(): "
+        << "GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size(): "
         << GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size()
         << "\n"
-        << "subcommandCommands.size(): "
+        << "GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS.size(): "
         << GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS.size()
         << std::endl;
         
         throw std::runtime_error(
-            "subcommandNames and subcommandCommands must be the same size"
+            "GlobalVariables::PLUMMET_SUBCOMMAND_NAMES and GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS must be the same size"
         );
     }
 

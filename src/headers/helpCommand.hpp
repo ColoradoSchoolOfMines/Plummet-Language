@@ -2,6 +2,7 @@
 #define HELPCOMMAND_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 

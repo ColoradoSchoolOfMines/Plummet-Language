@@ -29,9 +29,25 @@ from headers.result import Result
 
 INVENTORY_PATH = "./inventory.json"
 
-#
-# Utility functions
-#
+
+def inventory_exists() -> None:
+    """
+    Checks if the inventory file exists, if it does not, it prints an error
+    """
+
+    if not os.path.exists(INVENTORY_PATH):
+        print("Error: No inventory file found.")
+        sys.exit(1)
+
+
+def format_url_for_git(url: str) -> str:
+    """
+    Returns a url that is formatted for git.
+    """
+
+    if not url.endswith(".git"): url += ".git"
+    return url
+
 
 def get_repo_name_from_url(url: str) -> str:
     """
@@ -44,12 +60,11 @@ def get_repo_name_from_url(url: str) -> str:
     return repo                                # return the repo name
 
 
+# TODO: Review and Refactor this function
 def repair_inventory() -> Result:
     """
     Repairs the inventory file if it is corrupted or missing packages.
     """
-
-    global INVENTORY_PATH
 
     inventory = {}
     packages = list(filter(os.path.isdir, os.listdir("./packages")))
@@ -59,60 +74,49 @@ def repair_inventory() -> Result:
         package_data = json.load(open(f"./packages/{package}/config.json", "r"))
         inventory.update(package_data.keys(), package_data.values())
 
-def inventory_exists() -> Result:
-    """
-    Returns a Result object that indicates if the inventory file exists.
-    """
 
-    global INVENTORY_PATH
-
-    temp = os.path.exists(INVENTORY_PATH)
-
-    return Result(
-        "Inventory file found." if temp else "No inventory file found.",
-        temp
-    )
-
-
-def get_inventory() -> dict:
+def get_inventory_data() -> dict:
     """
     Returns the inventory file as a json object.
     """
 
-    global INVENTORY_PATH
-
-    result = inventory_exists()
-    result.unwrap(result.value)
+    inventory_exists()
     
     return json.load(open(INVENTORY_PATH, "r"))
 
 
-def set_inventory(inventory: dict) -> Result:
+def set_inventory_data(new_data: dict) -> None:
     """
     Overwrite or create the inventory file with the given inventory.
     """
 
-    global INVENTORY_PATH
-
-    if not os.path.exists(INVENTORY_PATH):
-        raise RuntimeError("No inventory file found.")
+    inventory_exists()
     
+    inventory: dict = get_inventory_data()
+
+    # TODO: make it so that it errors if new_data has more than one key
+    for package in new_data.keys():
+        if package in inventory:
+            print("Package already installed.")
+            sys.exit(1)
+
+    inventory.update(new_data)
+
     try:
-        json.dump(inventory, open(INVENTORY_PATH, "w"))
+        json.dump(inventory, open(INVENTORY_PATH, "w"), indent = 4)
     except Exception as e:
-        return Result(e, False)
-    
-    return Result("Inventory file updated.", True)
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
+# TODO: Review and Refactor this function
 def package_installed(repository: str) -> Result:
     
     #
     # Check if the inventory file exists and is valid
     #
 
-    if not os.path.exists(f"./inventory.json"):
-        return Result("No inventory file found.", False)
+    inventory_exists()
     
     inventory = None
     with open(f"./inventory.json", "r") as inv:
@@ -130,6 +134,8 @@ def package_installed(repository: str) -> Result:
 
     return Result(repository in inventory, True)        
 
+
+# TODO: Review and Refactor this function
 # NOTE: for now this function will assume that package_installed has already
 #       been called and that the package is not already installed
 def add_package_to_inventory(repository: str) -> Result:
@@ -151,16 +157,18 @@ def add_package_to_inventory(repository: str) -> Result:
     # Add the package to the inventory variable
     #
 
+
+# TODO: Review and Refactor this function
 def remove_package_from_inventory(repository: str) -> Result:
     pass
 
-#
-# Subcommand functions
-#
 
+# TODO: Review and Refactor this function
 def help_command() -> None:
     print("Usage: Subcommand: package [install/uninstall/installed] [link to git repository]")
 
+
+# TODO: Review and Refactor this function
 def installed_packages() -> None:
     # _path = "./inventory.json"
     # inventory = None
@@ -182,6 +190,8 @@ def installed_packages() -> None:
 
     pass
 
+
+# TODO: Review and Refactor this function
 def install_package(repository: str) -> Result:
 
     #
@@ -247,12 +257,11 @@ def install_package(repository: str) -> Result:
 
     return Result("Installed package.", True)
 
+
+# TODO: Review and Refactor this function
 def uninstall_package(repository: str) -> Result:
     pass
 
-#
-# Program entry point
-#
 
 if __name__ == "__main__":
 

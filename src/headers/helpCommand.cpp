@@ -8,11 +8,31 @@ void helpCommand::print() {
     << " <built in | subcommand> [flags]"
     << std::endl;
 
+    // get longest subcommand name
+
+    size_t longestSubcommandName = 8;
+
+    // for (size_t i = 0; i < GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES.size(); i++) {
+    //     if (GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES[i].size() > longestSubcommandName) {
+    //         longestSubcommandName = GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES[i].size();
+    //     }
+    // }
+
+    // for (size_t i = 0; i < GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size(); i++) {
+    //     if (GlobalVariables::PLUMMET_SUBCOMMAND_NAMES[i].size() > longestSubcommandName) {
+    //         longestSubcommandName = GlobalVariables::PLUMMET_SUBCOMMAND_NAMES[i].size();
+    //     }
+    // }
+
     std::cout << "Built in subcommands:" << std::endl;
 
-    for (int i = 0; i < GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES.size(); i++) {
+    for (size_t i = 0; i < GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES.size(); i++) {
         std::cout
         << "    "
+        << std::left
+        << std::setw(longestSubcommandName)
+        << std::setfill(' ')
+        // << "    "
         << GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_NAMES[i]
         << " - "
         << GlobalVariables::PLUMMET_BUILTIN_SUBCOMMAND_HELP[i]
@@ -21,9 +41,12 @@ void helpCommand::print() {
 
     std::cout << "Subcommands:" << std::endl;
     
-    for (int i = 0; i < GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size(); i++) {
+    for (size_t i = 0; i < GlobalVariables::PLUMMET_SUBCOMMAND_NAMES.size(); i++) {
         std::cout
         << "    "
+        << std::left
+        << std::setw(longestSubcommandName)
+        << std::setfill(' ')
         << GlobalVariables::PLUMMET_SUBCOMMAND_NAMES[i]
         << " - "
         << GlobalVariables::PLUMMET_SUBCOMMAND_COMMANDS[i]

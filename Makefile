@@ -3,22 +3,25 @@
 COMPILER = clang++
 HEADERS = $(wildcard src/headers/*.cpp)
 OUTPUT = plummet
-DEV_FLAGS = -DPLUMMET_ROOT=\"$$PWD\"
-FLAGS = -Isrc/headers
+DEV_FLAGS = -DPLUMMET_ROOT=\"$$PWD\" -g -O0
+STRICT_DEV_FLAGS = -Wall -Wextra -Werror -pedantic -pedantic-errors -fsanitize=address -fsanitize=undefined
+PROD_FLAGS = -O2 -march=native -flto
+# FLAGS = -Isrc/headers
+FLAGS =
 
 PYTHON = python3
 TEST_NUMBER =
 
 help:
 	@echo "Usage: make [target]"
-	@echo "  make help       - Show this help message"
-	@echo "  make clean_diff - Clean the test diffs"
-	@echo "  make clean      - Clean the build"
-	@echo "  make build_dev  - Build the development version"
-	@echo "  make build      - Build the production version"
-	@echo "  make test       - Run the prod test suite   - Optional: TEST_NUMBER=<number>"
-	@echo "  make install    - Install the application   - Required: RUN WITH ROOT"
-	@echo "  make uninstall  - Uninstall the application - Required: RUN WITH ROOT"
+	@echo "  make help             - Show this help message"
+	@echo "  make clean_diff       - Clean the test diffs"
+	@echo "  make clean            - Clean the build"
+	@echo "  make build_dev        - Build the development version"
+	@echo "  make build            - Build the production version"
+	@echo "  make test             - Run the prod test suite   - Optional: TEST_NUMBER=<number>"
+	@echo "  make install          - Install the application   - Required: RUN WITH ROOT"
+	@echo "  make uninstal         - Uninstall the application - Required: RUN WITH ROOT"
 
 clean_diff:
 	@if [ -f tests/diffs/*.txt ]; then \
@@ -44,10 +47,11 @@ clean: clean_diff
 	fi
 
 build_dev: clean
-	$(COMPILER) src/main.cpp $(HEADERS) $(FLAGS) $(DEV_FLAGS) -o $(OUTPUT)_dev
+	@# The strict flags can be ignored if you use STRICT_DEV_FLAGS=
+	$(COMPILER) src/main.cpp $(HEADERS) $(FLAGS) $(DEV_FLAGS) $(STRICT_DEV_FLAGS) -o $(OUTPUT)_dev
 
 build: clean
-	$(COMPILER) src/main.cpp $(HEADERS) $(FLAGS) -o $(OUTPUT)
+	$(COMPILER) src/main.cpp $(HEADERS) $(FLAGS) $(PROD_FLAGS) -o $(OUTPUT)
 
 test: build_dev
 	@$(PYTHON) tests/run_tests.py $(TEST_NUMBER)
@@ -84,3 +88,5 @@ uninstall: check_root
 	fi
 	@rm /usr/local/bin/$(OUTPUT)
 	@echo "Uninstall Complete!"
+
+.PHONY: help clean_diff clean build_dev build test check_root install uninstall
