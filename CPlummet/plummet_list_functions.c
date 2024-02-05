@@ -46,7 +46,8 @@ PLUMMET_VARIABLE *plummet_list_at(
     PLUMMET_LIST *l = list->value.list;
     
     if (index < 0 || index >= l->size) {
-        return NULL;
+        perror("plummet_list_at() called with invalid index\n");
+        exit(1);
     }
 
     PLUMMET_LIST_NODE *node = l->head;
@@ -54,8 +55,7 @@ PLUMMET_VARIABLE *plummet_list_at(
         node = node->next;
     }
 
-    PLUMMET_VARIABLE *temp = node->value; // MIGHT BE USELESS
-    return temp;
+    return node->value;
 }
 
 bool plummet_list_remove(
@@ -72,19 +72,25 @@ bool plummet_list_remove(
     if (index < 0 || index >= l->size) {
         return false;
     }
+
     PLUMMET_LIST_NODE *node = l->head;
+    
     if (index == 0) {
         l->head = node->next;
         free(node);
         l->size--;
         return true;
     }
+
     for (int i = 0; i < index - 1; i++) {
         node = node->next;
     }
+
     PLUMMET_LIST_NODE *temp = node->next;
     node->next = temp->next;
     free(temp);
+
     l->size--;
+
     return true;
 }

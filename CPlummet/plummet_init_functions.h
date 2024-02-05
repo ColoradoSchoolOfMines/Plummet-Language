@@ -1,6 +1,9 @@
 #ifndef PLUMMET_INIT_FUNCTIONS_H
 #define PLUMMET_INIT_FUNCTIONS_H
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "plummet_variable.h"
 #include "plummet_type.h"
 #include "plummet_map.h"

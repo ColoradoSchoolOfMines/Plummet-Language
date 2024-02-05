@@ -15,9 +15,14 @@ int main() {
 	plummet_list_push(&var, &el2);
 	plummet_list_push(&var, &el3);
 
+	// print(*plummet_list_at(&var, 0));
+	// print(*plummet_list_at(&var, 1));
+	// print(*plummet_list_at(&var, 2));
+	// print(*plummet_list_at(&var, 3));
+
 	for (int i = 0; i < var.value.list->size; i++) {
-		print(*plummet_list_at(&var, i)); // There is an error indexing past 0
 		PLUMMET_VARIABLE temp = *plummet_list_at(&var, i);
+		print(temp);
 		print(plummet_get_type(temp));
 	}
 

@@ -18,6 +18,9 @@ PLUMMET_VARIABLE make_plummet_variable_string(char *x) {
 	PLUMMET_VARIABLE var;
 	var.type = PLUMMET_TYPE_STRING;
 	var.value.str = x;
+	// // TODO: evaluate is strdup is mem safe vs strcpy
+	// var.value.str = strdup(x);
+	// // strcpy(var.value.str, x);
 	return var;
 }
 

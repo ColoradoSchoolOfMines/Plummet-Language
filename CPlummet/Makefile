@@ -1,3 +1,6 @@
+help:
+	@echo "generate_std_lib or build"
+
 generate_std_lib:
 	@for file in *.h; do \
 		echo \#include \"$$file\"; \
